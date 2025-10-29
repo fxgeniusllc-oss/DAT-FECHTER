@@ -1,0 +1,39 @@
+{
+  "tokens": [
+    {
+      "symbol": "WETH",
+      "decimals": 18,
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+    },
+    {
+      "symbol": "USDC",
+      "decimals": 6,
+      "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+    },
+    {
+      "symbol": "DAI",
+      "decimals": 18,
+      "address": "0x6b175474e89094c44da98b954eedeac495271d0f"
+    }
+  ],
+  "pools": [
+    {
+      "dexName": "Uniswap V3",
+      "chain": "Ethereum",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "reserve0": 1000000000,
+      "reserve1": 500000000000000000,
+      "fee": 3000
+    },
+    {
+      "dexName": "SushiSwap",
+      "chain": "Ethereum",
+      "token0": "0x6b175474e89094c44da98b954eedeac495271d0f",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "reserve0": 2000000000000000000000,
+      "reserve1": 1000000000000000000,
+      "fee": 3000
+    }
+  ]
+}
