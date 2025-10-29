@@ -157,6 +157,8 @@ The output will consist of two main components:
 
 For comprehensive testing instructions including how to run tests with your secrets and environment variables both locally and in CI/CD, see the **[Testing Guide (TESTING.md)](TESTING.md)**.
 
+For setting up GitHub repository secrets for automated testing in CI/CD, see the **[GitHub Secrets Setup Guide (GITHUB_SECRETS_SETUP.md)](GITHUB_SECRETS_SETUP.md)**.
+
 ### Quick Test Commands
 
 ```bash
@@ -177,6 +179,7 @@ Contributions are welcome! If you have any suggestions or improvements, please f
 ## Additional Resources
 
 - [Testing Guide](TESTING.md) - Comprehensive testing documentation
+- [GitHub Secrets Setup](GITHUB_SECRETS_SETUP.md) - Configure secrets for CI/CD
 - [Uniswap V3 Subgraph](https://thegraph.com/explorer/subgraph/uniswap/uniswap-v3)
 - [SushiSwap Subgraph](https://thegraph.com/explorer/subgraph/sushiswap/exchange)
 - [QuickSwap Subgraph](https://thegraph.com/explorer/subgraph/sameepsi/quickswap06)
