@@ -1,0 +1,20 @@
+[package]
+name = "dat-fechter"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "dat_fechter"
+path = "src/lib.rs"
+
+[[bin]]
+name = "dual_executor"
+path = "src/bin/dual_executor.rs"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+ndarray = "0.16"
+ort = { version = "2.0.0-rc.10", default-features = false, features = ["ndarray", "std"] }
+
+[dev-dependencies]

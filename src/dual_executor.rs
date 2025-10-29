@@ -29,12 +29,12 @@ pub struct DexData {
 }
 
 // Engine trait
-trait Engine {
+pub trait Engine {
     fn execute(&self, data: &DexData);
 }
 
 // First engine example: prints summary stats
-struct SummaryEngine;
+pub struct SummaryEngine;
 impl Engine for SummaryEngine {
     fn execute(&self, data: &DexData) {
         println!("SummaryEngine: {} tokens, {} pools", data.tokens.len(), data.pools.len());
@@ -42,12 +42,12 @@ impl Engine for SummaryEngine {
 }
 
 // Second engine example: prints top pool by reserve
-struct TopPoolEngine;
+pub struct TopPoolEngine;
 impl Engine for TopPoolEngine {
     fn execute(&self, data: &DexData) {
         if let Some(top_pool) = data.pools.iter().max_by_key(|p| p.reserve0 + p.reserve1) {
             println!("TopPoolEngine: Top pool is {} with reserve0+reserve1={}", 
-                top_pool.dexName, top_pool.reserve0 + top_pool.reserve1);
+                top_pool.dex_name, top_pool.reserve0 + top_pool.reserve1);
         }
     }
 }
@@ -96,18 +96,20 @@ impl Engine for AIScorerEngine {
 }
 
 // Dual executor
-struct DualExecutor {
+pub struct DualExecutor {
     engines: Vec<Box<dyn Engine>>,
 }
 
 impl DualExecutor {
-    fn new() -> Self {
+    pub fn new() -> Self {
         DualExecutor { engines: Vec::new() }
     }
-    fn add_engine(&mut self, engine: Box<dyn Engine>) {
+    
+    pub fn add_engine(&mut self, engine: Box<dyn Engine>) {
         self.engines.push(engine);
     }
-    fn run(&self, data: &DexData) {
+    
+    pub fn run(&self, data: &DexData) {
         for engine in &self.engines {
             engine.execute(data);
         }
