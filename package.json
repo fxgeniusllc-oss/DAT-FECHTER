@@ -11,7 +11,9 @@
     "lint": "eslint src/**/*.js",
     "clean": "echo 'No build artifacts to clean'",
     "start": "node src/api/index.js",
-    "start:dev": "dotenv -e .env -- node src/api/index.js"
+    "start:dev": "dotenv -e .env -- node src/api/index.js",
+    "validate": "node validate-system.js",
+    "validate:full": "npm run validate && npm test"
   },
   "keywords": [
     "dex",

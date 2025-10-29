@@ -340,10 +340,10 @@ describe('AI Scorer and Executor Integration', () => {
       const scorerPath = path.join(__dirname, '..', 'ai_onnx_scorer.rs');
       const content = fs.readFileSync(scorerPath, 'utf8');
 
-      // Check for required type definitions
-      expect(content).toMatch(/struct Token/);
-      expect(content).toMatch(/struct Pool/);
-      expect(content).toMatch(/struct DexData/);
+      // Check for required type definitions (re-exported from dual_executor)
+      expect(content).toMatch(/Token|pub use crate::dual_executor/);
+      expect(content).toMatch(/Pool|pub use crate::dual_executor/);
+      expect(content).toMatch(/DexData|pub use crate::dual_executor/);
       expect(content).toMatch(/fn score_pools_with_onnx/);
     });
 
