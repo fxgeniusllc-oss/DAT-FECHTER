@@ -31,7 +31,7 @@ Returns the health status of the API server.
 GET /v1/evm/pools
 ```
 
-Returns Uniswap liquidity pool metadata including token pairs, fees, and protocol versions.
+Returns liquidity pool metadata from multiple DEXes (Uniswap V3, SushiSwap, QuickSwap) including token pairs, fees, and protocol versions.
 
 #### Query Parameters
 
@@ -44,7 +44,7 @@ Returns Uniswap liquidity pool metadata including token pairs, fees, and protoco
 | `output_token` | string | Filter by output token contract address. Supports single value or comma-separated array of values. | No | - |
 | `protocol` | string | Protocol name. Accepted values: `uniswap_v2`, `uniswap_v3`, `uniswap_v4` | No | All protocols |
 | `limit` | integer | Number of items returned in a single request. Min: 1, Max: 1000 | No | 10 |
-| `page` | integer | Page number to fetch. Min: 1, Max: 767465558638 | No | 1 |
+| `page` | integer | Page number to fetch. Min: 1 | No | 1 |
 
 #### Response Format
 
@@ -217,10 +217,15 @@ The server integrates with the existing `dex-data-fetcher` module to fetch real-
 
 ## Protocol Mapping
 
-| Protocol ID | DEX Name |
-|-------------|----------|
-| `uniswap_v2` | Uniswap V2 |
-| `uniswap_v3` | Uniswap V3 |
-| `uniswap_v4` | Uniswap V4 |
+| Protocol ID | DEX Name | Status |
+|-------------|----------|--------|
+| `uniswap_v2` | Uniswap V2 | Planned |
+| `uniswap_v3` | Uniswap V3 | ✅ Supported |
+| `uniswap_v4` | Uniswap V4 | Planned |
 
-Note: Currently, the implementation fetches data from Uniswap V3, SushiSwap, and QuickSwap. Additional protocol support can be added by extending the `dex-data-fetcher` module.
+**Note:** Currently, the implementation fetches data from the following DEXes:
+- **Uniswap V3** (Ethereum) - Filter with `protocol=uniswap_v3`
+- **SushiSwap** (Ethereum) - Shown as protocol "SushiSwap" in results
+- **QuickSwap** (Polygon) - Shown as protocol "QuickSwap" in results
+
+The protocol parameter accepts `uniswap_v2`, `uniswap_v3`, and `uniswap_v4` for forward compatibility. Additional DEXes and protocol versions can be added by extending the `dex-data-fetcher` module.
