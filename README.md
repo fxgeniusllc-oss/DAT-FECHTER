@@ -153,12 +153,30 @@ The output will consist of two main components:
 }
 ```
 
+## Testing
+
+For comprehensive testing instructions including how to run tests with your secrets and environment variables both locally and in CI/CD, see the **[Testing Guide (TESTING.md)](TESTING.md)**.
+
+### Quick Test Commands
+
+```bash
+# Run tests with environment variables from .env
+npm run test:env
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run comprehensive test suite using the test runner script
+./run-tests.sh
+```
+
 ## Contributing
 
 Contributions are welcome! If you have any suggestions or improvements, please feel free to submit a pull request or open an issue.
 
 ## Additional Resources
 
+- [Testing Guide](TESTING.md) - Comprehensive testing documentation
 - [Uniswap V3 Subgraph](https://thegraph.com/explorer/subgraph/uniswap/uniswap-v3)
 - [SushiSwap Subgraph](https://thegraph.com/explorer/subgraph/sushiswap/exchange)
 - [QuickSwap Subgraph](https://thegraph.com/explorer/subgraph/sameepsi/quickswap06)
