@@ -1,48 +1,66 @@
-import { GraphQLClient } from 'graphql-request';
+const { GraphQLClient } = require('graphql-request');
 
 /**
- * Token interface representing a cryptocurrency token
+ * @typedef {Object} Token
+ * @property {string} symbol - Token symbol (e.g., ETH)
+ * @property {number} decimals - Number of decimals
+ * @property {string} address - Token address (lowercase)
  */
-export interface Token {
-  symbol: string;
-  decimals: number;
-  address: string;
-}
 
 /**
- * Pool interface representing a liquidity pool
+ * @typedef {Object} Pool
+ * @property {string} dexName - Name of the DEX (e.g., Uniswap V3)
+ * @property {string} chain - Blockchain (e.g., Ethereum)
+ * @property {string} token0 - Address of token0 (lowercase)
+ * @property {string} token1 - Address of token1 (lowercase)
+ * @property {bigint} reserve0 - Normalized reserve of token0
+ * @property {bigint} reserve1 - Normalized reserve of token1
+ * @property {bigint} fee - Fee tier as a BigInt
  */
-export interface Pool {
-  dexName: string;
-  chain: string;
-  token0: string;
-  token1: string;
-  reserve0: bigint;
-  reserve1: bigint;
-  fee: bigint;
-}
 
 /**
- * Configuration interface for DEX data fetcher
+ * @typedef {Object} DexConfig
+ * @property {string} ethereumRpcUrl - Ethereum RPC URL
+ * @property {string} polygonRpcUrl - Polygon RPC URL
+ * @property {string} [graphApiKey] - Optional Graph API key
  */
-export interface DexConfig {
-  ethereumRpcUrl: string;
-  polygonRpcUrl: string;
-  graphApiKey?: string;
-}
 
 /**
- * Result interface for fetched DEX data
+ * @typedef {Object} DexData
+ * @property {Token[]} tokens - Array of unique tokens
+ * @property {Pool[]} pools - Array of liquidity pools
  */
-export interface DexData {
-  tokens: Token[];
-  pools: Pool[];
+
+/**
+ * Convert reserve string to BigInt safely without precision loss
+ * @param {string} reserveStr - Reserve value as string
+ * @param {number} decimals - Token decimals (default 18)
+ * @returns {bigint} - Reserve as BigInt
+ */
+function parseReserveToBigInt(reserveStr, decimals = 18) {
+  if (!reserveStr || reserveStr === '0') {
+    return BigInt(0);
+  }
+  
+  // Split on decimal point
+  const parts = reserveStr.split('.');
+  const integerPart = parts[0] || '0';
+  const fractionalPart = parts[1] || '';
+  
+  // Pad or truncate fractional part to match decimals
+  const paddedFractional = fractionalPart.padEnd(decimals, '0').substring(0, decimals);
+  
+  // Combine and convert to BigInt
+  const combined = integerPart + paddedFractional;
+  return BigInt(combined);
 }
 
 /**
  * Fetch Uniswap V3 data from The Graph
+ * @param {DexConfig} config - Configuration object
+ * @returns {Promise<{tokens: Token[], pools: Pool[]}>}
  */
-async function fetchUniswapV3Data(config: DexConfig): Promise<{ tokens: Token[]; pools: Pool[] }> {
+async function fetchUniswapV3Data(config) {
   const subgraphUrl = process.env.UNISWAP_V3_SUBGRAPH_URL || 
     'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3';
   
@@ -73,14 +91,14 @@ async function fetchUniswapV3Data(config: DexConfig): Promise<{ tokens: Token[];
   `;
 
   try {
-    const data: any = await client.request(query);
-    const pools: Pool[] = [];
-    const tokenMap = new Map<string, Token>();
+    const data = await client.request(query);
+    const pools = [];
+    const tokenMap = new Map();
 
-    data.pools?.forEach((pool: any) => {
+    data.pools?.forEach((pool) => {
       // Add tokens to registry
       if (!tokenMap.has(pool.token0.id)) {
-        const token: Token = {
+        const token = {
           symbol: pool.token0.symbol,
           decimals: parseInt(pool.token0.decimals),
           address: pool.token0.id.toLowerCase()
@@ -89,7 +107,7 @@ async function fetchUniswapV3Data(config: DexConfig): Promise<{ tokens: Token[];
       }
 
       if (!tokenMap.has(pool.token1.id)) {
-        const token: Token = {
+        const token = {
           symbol: pool.token1.symbol,
           decimals: parseInt(pool.token1.decimals),
           address: pool.token1.id.toLowerCase()
@@ -118,8 +136,10 @@ async function fetchUniswapV3Data(config: DexConfig): Promise<{ tokens: Token[];
 
 /**
  * Fetch SushiSwap data from The Graph
+ * @param {DexConfig} config - Configuration object
+ * @returns {Promise<{tokens: Token[], pools: Pool[]}>}
  */
-async function fetchSushiSwapData(config: DexConfig): Promise<{ tokens: Token[]; pools: Pool[] }> {
+async function fetchSushiSwapData(config) {
   const subgraphUrl = process.env.SUSHISWAP_SUBGRAPH_URL || 
     'https://api.thegraph.com/subgraphs/name/sushiswap/exchange';
   
@@ -148,14 +168,14 @@ async function fetchSushiSwapData(config: DexConfig): Promise<{ tokens: Token[];
   `;
 
   try {
-    const data: any = await client.request(query);
-    const pools: Pool[] = [];
-    const tokenMap = new Map<string, Token>();
+    const data = await client.request(query);
+    const pools = [];
+    const tokenMap = new Map();
 
-    data.pairs?.forEach((pair: any) => {
+    data.pairs?.forEach((pair) => {
       // Add tokens to registry
       if (!tokenMap.has(pair.token0.id)) {
-        const token: Token = {
+        const token = {
           symbol: pair.token0.symbol,
           decimals: parseInt(pair.token0.decimals),
           address: pair.token0.id.toLowerCase()
@@ -164,7 +184,7 @@ async function fetchSushiSwapData(config: DexConfig): Promise<{ tokens: Token[];
       }
 
       if (!tokenMap.has(pair.token1.id)) {
-        const token: Token = {
+        const token = {
           symbol: pair.token1.symbol,
           decimals: parseInt(pair.token1.decimals),
           address: pair.token1.id.toLowerCase()
@@ -172,14 +192,14 @@ async function fetchSushiSwapData(config: DexConfig): Promise<{ tokens: Token[];
         tokenMap.set(pair.token1.id, token);
       }
 
-      // Add pool
+      // Add pool - use parseReserveToBigInt to avoid precision loss
       pools.push({
         dexName: 'SushiSwap',
         chain: 'Ethereum',
         token0: pair.token0.id.toLowerCase(),
         token1: pair.token1.id.toLowerCase(),
-        reserve0: BigInt(Math.floor(parseFloat(pair.reserve0 || 0) * 1e18)),
-        reserve1: BigInt(Math.floor(parseFloat(pair.reserve1 || 0) * 1e18)),
+        reserve0: parseReserveToBigInt(pair.reserve0 || '0', 18),
+        reserve1: parseReserveToBigInt(pair.reserve1 || '0', 18),
         fee: BigInt(3000) // SushiSwap uses 0.3% fee
       });
     });
@@ -193,8 +213,10 @@ async function fetchSushiSwapData(config: DexConfig): Promise<{ tokens: Token[];
 
 /**
  * Fetch QuickSwap data from The Graph
+ * @param {DexConfig} config - Configuration object
+ * @returns {Promise<{tokens: Token[], pools: Pool[]}>}
  */
-async function fetchQuickSwapData(config: DexConfig): Promise<{ tokens: Token[]; pools: Pool[] }> {
+async function fetchQuickSwapData(config) {
   const subgraphUrl = process.env.QUICKSWAP_SUBGRAPH_URL || 
     'https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06';
   
@@ -223,14 +245,14 @@ async function fetchQuickSwapData(config: DexConfig): Promise<{ tokens: Token[];
   `;
 
   try {
-    const data: any = await client.request(query);
-    const pools: Pool[] = [];
-    const tokenMap = new Map<string, Token>();
+    const data = await client.request(query);
+    const pools = [];
+    const tokenMap = new Map();
 
-    data.pairs?.forEach((pair: any) => {
+    data.pairs?.forEach((pair) => {
       // Add tokens to registry
       if (!tokenMap.has(pair.token0.id)) {
-        const token: Token = {
+        const token = {
           symbol: pair.token0.symbol,
           decimals: parseInt(pair.token0.decimals),
           address: pair.token0.id.toLowerCase()
@@ -239,7 +261,7 @@ async function fetchQuickSwapData(config: DexConfig): Promise<{ tokens: Token[];
       }
 
       if (!tokenMap.has(pair.token1.id)) {
-        const token: Token = {
+        const token = {
           symbol: pair.token1.symbol,
           decimals: parseInt(pair.token1.decimals),
           address: pair.token1.id.toLowerCase()
@@ -247,14 +269,14 @@ async function fetchQuickSwapData(config: DexConfig): Promise<{ tokens: Token[];
         tokenMap.set(pair.token1.id, token);
       }
 
-      // Add pool
+      // Add pool - use parseReserveToBigInt to avoid precision loss
       pools.push({
         dexName: 'QuickSwap',
         chain: 'Polygon',
         token0: pair.token0.id.toLowerCase(),
         token1: pair.token1.id.toLowerCase(),
-        reserve0: BigInt(Math.floor(parseFloat(pair.reserve0 || 0) * 1e18)),
-        reserve1: BigInt(Math.floor(parseFloat(pair.reserve1 || 0) * 1e18)),
+        reserve0: parseReserveToBigInt(pair.reserve0 || '0', 18),
+        reserve1: parseReserveToBigInt(pair.reserve1 || '0', 18),
         fee: BigInt(3000) // QuickSwap uses 0.3% fee
       });
     });
@@ -268,9 +290,11 @@ async function fetchQuickSwapData(config: DexConfig): Promise<{ tokens: Token[];
 
 /**
  * Merge tokens from multiple sources, removing duplicates
+ * @param {Token[][]} tokenArrays - Arrays of tokens to merge
+ * @returns {Token[]} - Merged unique tokens
  */
-function mergeTokens(tokenArrays: Token[][]): Token[] {
-  const tokenMap = new Map<string, Token>();
+function mergeTokens(tokenArrays) {
+  const tokenMap = new Map();
   
   tokenArrays.forEach(tokens => {
     tokens.forEach(token => {
@@ -285,10 +309,10 @@ function mergeTokens(tokenArrays: Token[][]): Token[] {
 
 /**
  * Main function to fetch all DEX data
- * @param config Configuration object with RPC URLs and API keys
- * @returns Promise resolving to DexData with tokens and pools
+ * @param {DexConfig} [config] - Configuration object with RPC URLs and API keys
+ * @returns {Promise<DexData>} - Promise resolving to DexData with tokens and pools
  */
-export async function fetchAllDexData(config?: DexConfig): Promise<DexData> {
+async function fetchAllDexData(config) {
   // Build config with proper fallback logic - only use env vars if config values are empty/undefined
   const ethereumRpcUrl = (config?.ethereumRpcUrl && config.ethereumRpcUrl.trim() !== '') 
     ? config.ethereumRpcUrl 
@@ -300,7 +324,7 @@ export async function fetchAllDexData(config?: DexConfig): Promise<DexData> {
   
   const graphApiKey = config?.graphApiKey || process.env.GRAPH_API_KEY;
 
-  const finalConfig: DexConfig = {
+  const finalConfig = {
     ethereumRpcUrl,
     polygonRpcUrl,
     graphApiKey
@@ -346,11 +370,17 @@ export async function fetchAllDexData(config?: DexConfig): Promise<DexData> {
 
 /**
  * Get configuration from environment variables
+ * @returns {DexConfig} - Configuration object
  */
-export function getConfigFromEnv(): DexConfig {
+function getConfigFromEnv() {
   return {
     ethereumRpcUrl: process.env.ETHEREUM_RPC_URL || '',
     polygonRpcUrl: process.env.POLYGON_RPC_URL || '',
     graphApiKey: process.env.GRAPH_API_KEY
   };
 }
+
+module.exports = {
+  fetchAllDexData,
+  getConfigFromEnv
+};

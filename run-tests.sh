@@ -56,11 +56,6 @@ if [ ! -d "node_modules" ]; then
     echo ""
 fi
 
-# Build the project
-echo "Building TypeScript..."
-npm run build
-echo ""
-
 # Run tests
 echo "=========================================="
 echo "  Running Comprehensive Tests"

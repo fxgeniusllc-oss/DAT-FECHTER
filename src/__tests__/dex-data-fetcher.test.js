@@ -1,6 +1,6 @@
-import { fetchAllDexData, getConfigFromEnv, DexConfig } from '../dex-data-fetcher';
-import dotenv from 'dotenv';
-import path from 'path';
+const { fetchAllDexData, getConfigFromEnv } = require('../dex-data-fetcher');
+const dotenv = require('dotenv');
+const path = require('path');
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
@@ -14,7 +14,7 @@ console.log('Environment variables loaded:', {
 });
 
 describe('DEX Data Fetcher - Comprehensive Tests', () => {
-  let config: DexConfig;
+  let config;
 
   beforeAll(() => {
     // Load configuration from environment variables

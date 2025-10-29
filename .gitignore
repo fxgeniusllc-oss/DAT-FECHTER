@@ -12,10 +12,7 @@ yarn-error.log*
 # Build output
 dist/
 build/
-*.js
 *.js.map
-!jest.config.js
-!.eslintrc.js
 
 # IDE
 .vscode/
