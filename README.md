@@ -4,14 +4,48 @@
 
 ## Overview
 
-The **DEX Data Fetcher** is a TypeScript module designed to aggregate and normalize liquidity pool data from multiple decentralized exchanges (DEXes) including **Uniswap V3**, **SushiSwap**, and **QuickSwap**. This module serves as a foundational component for building arbitrage strategies by providing real-time token and pool information.
+The **DEX Data Fetcher** is a Node.js module designed to aggregate and normalize liquidity pool data from multiple decentralized exchanges (DEXes) including **Uniswap V3**, **SushiSwap**, and **QuickSwap**. It provides both a JavaScript module for programmatic access and a **REST API server** for easy integration with any application.
 
 ### Key Features
 
-- **Fetches real-time liquidity pool data** from multiple DEXes.
-- **Normalizes token reserves** based on their decimal values.
-- **Maintains a global token registry** for easy access to token information.
-- **Organizes liquidity pools** with references to token addresses for efficient arbitrage calculations.
+- **REST API Server** - Production-ready Express API with `/v1/evm/pools` endpoint
+- **Fetches real-time liquidity pool data** from multiple DEXes
+- **Comprehensive filtering** - Filter by network, protocol, tokens, pools, and factories
+- **Pagination support** - Efficient data retrieval with configurable page sizes
+- **Normalizes token reserves** based on their decimal values
+- **Maintains a global token registry** for easy access to token information
+- **Organizes liquidity pools** with references to token addresses for efficient arbitrage calculations
+
+## Quick Start
+
+### API Server
+
+Start the REST API server to access liquidity pool data:
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Configure environment variables
+cp .env.example .env
+# Edit .env with your RPC URLs and API keys
+
+# 3. Start the API server
+npm run start:dev
+```
+
+The API will be available at `http://localhost:3000`
+
+**Example API Request:**
+```bash
+# Get all pools
+curl http://localhost:3000/v1/evm/pools
+
+# Get Uniswap V3 pools on Ethereum mainnet
+curl http://localhost:3000/v1/evm/pools?network=mainnet&protocol=uniswap_v3
+```
+
+📖 **[Full API Documentation](docs/API.md)**
 
 ## Installation
 
