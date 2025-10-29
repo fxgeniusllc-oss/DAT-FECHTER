@@ -77,15 +77,23 @@ const MONITORED_TOKENS = [
 ];
 
 /**
- * Create a map of token addresses (lowercase) to token info
- * @returns {Map<string, MonitoredToken>} Map of lowercase addresses to token info
+ * Cached map of token addresses (lowercase) to token info
+ * @type {Map<string, MonitoredToken>}
  */
-function getMonitoredTokensMap() {
+const MONITORED_TOKENS_MAP = (() => {
   const map = new Map();
   MONITORED_TOKENS.forEach(token => {
     map.set(token.address.toLowerCase(), token);
   });
   return map;
+})();
+
+/**
+ * Get the cached map of token addresses to token info
+ * @returns {Map<string, MonitoredToken>} Map of lowercase addresses to token info
+ */
+function getMonitoredTokensMap() {
+  return MONITORED_TOKENS_MAP;
 }
 
 /**
