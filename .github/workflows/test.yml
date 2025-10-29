@@ -7,9 +7,15 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
     
     strategy:
       matrix:
@@ -69,6 +75,9 @@ jobs:
 
   test-without-secrets:
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
     
     steps:
     - name: Checkout repository
