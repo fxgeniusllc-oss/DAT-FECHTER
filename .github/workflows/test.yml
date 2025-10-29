@@ -8,14 +8,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: read & write 
 
 jobs:
   test:
     runs-on: ubuntu-latest
     
     permissions:
-      contents: read
+      contents: read & write 
     
     strategy:
       matrix:
@@ -67,7 +67,7 @@ jobs:
     
     # Explicitly restrict permissions at job level - no write access
     permissions:
-      contents: read
+      contents: read & write 
     
     steps:
     - name: Checkout repository
