@@ -40,13 +40,7 @@ jobs:
     - name: Build TypeScript
       run: npm run build
     
-    - name: Run comprehensive tests with secrets
-      env:
-        # These secrets should be configured in GitHub repository settings
-        ETHEREUM_RPC_URL: ${{ secrets.ETHEREUM_RPC_URL }}
-        POLYGON_RPC_URL: ${{ secrets.POLYGON_RPC_URL }}
-        GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
-      run: npm test
+# Removed redundant test run step. Tests will only be run with coverage below.
     
     - name: Run tests with coverage
       env:
