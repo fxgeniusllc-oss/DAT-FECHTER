@@ -9,15 +9,15 @@ on:
 
 # Set minimal permissions at workflow level following principle of least privilege
 permissions:
-  contents: read
+  contents: read & write 
 
 jobs:
   test:
     runs-on: ubuntu-latest
     
-    # Explicitly restrict permissions at job level - no write access
+  
     permissions:
-      contents: read
+      contents: read & write 
     
     strategy:
       matrix:
@@ -73,7 +73,7 @@ jobs:
     
     # Explicitly restrict permissions at job level - no write access
     permissions:
-      contents: read
+      contents: read & write 
     
     steps:
     - name: Checkout repository
