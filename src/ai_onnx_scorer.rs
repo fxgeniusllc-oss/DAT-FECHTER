@@ -23,6 +23,10 @@ fn pool_to_features(pool: &Pool) -> Vec<f32> {
 /// * `dex_data` - The DEX data containing pools to score
 /// * `model_path` - Path to the ONNX model file
 /// 
+/// # Note
+/// This function uses the ort v2.0.0-rc.10 API. The API may differ in other versions.
+/// Ensure ONNX Runtime is properly installed or enable the `download-binaries` feature.
+/// 
 /// # Example
 /// ```ignore
 /// let dex_data = load_dex_data("dex_data.json")?;
@@ -35,8 +39,8 @@ pub fn score_pools_with_onnx<'a>(
     dex_data: &'a DexData,
     model_path: &Path,
 ) -> Result<Vec<(f32, &'a Pool)>, Box<dyn Error>> {
-    // Setup ONNX session using v2.0 API
-    // The builder pattern for loading a model from file
+    // Setup ONNX session using v2.0.0-rc.10 API
+    // Note: commit_from_file is the correct method for this version
     let mut session = Session::builder()?
         .commit_from_file(model_path)?;
 
@@ -52,11 +56,12 @@ pub fn score_pools_with_onnx<'a>(
         // Create input tensor value
         let input_tensor = Value::from_array(input_array)?;
         
-        // Run inference
+        // Run inference using ort v2.0.0-rc.10 API
+        // The inputs! macro creates the appropriate input format
         let outputs = session.run(ort::inputs![input_tensor])?;
         
         // Extract score from output tensor
-        // try_extract_tensor returns (&Shape, &[T])
+        // try_extract_tensor returns (&Shape, &[T]) in this API version
         let (_shape, data) = outputs[0].try_extract_tensor::<f32>()?;
         let score = data.first().copied().unwrap_or(0.0);
         results.push((score, pool));
