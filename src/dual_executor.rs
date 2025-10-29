@@ -1,4 +1,14 @@
-use serde::{Deserialize};
+const { fetchAllDexData, getConfigFromEnv } = require('path-to-DAT-FECHTER/src/index.js');
+
+async function main() {
+  const config = getConfigFromEnv();
+  const { tokens, pools } = await fetchAllDexData(config);
+
+  const results = yourAIScorerOrExecutor({ tokens, pools });
+  console.log(results);
+}
+
+main();use serde::{Deserialize};
 use std::fs;
 use std::error::Error;
 
