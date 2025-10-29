@@ -74,7 +74,6 @@ async function fetchUniswapV3Data(config: DexConfig): Promise<{ tokens: Token[];
 
   try {
     const data: any = await client.request(query);
-    const tokens: Token[] = [];
     const pools: Pool[] = [];
     const tokenMap = new Map<string, Token>();
 
