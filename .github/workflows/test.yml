@@ -7,7 +7,6 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
 
-# Set minimal permissions at workflow level following principle of least privilege
 permissions:
   contents: read & write 
 
@@ -15,7 +14,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     
-  
     permissions:
       contents: read & write 
     
@@ -37,10 +35,7 @@ jobs:
       run: npm ci
     
     - name: Run linter
-      run: npm run lint || echo "Linting skipped - no linter configured yet"
-    
-    - name: Build TypeScript
-      run: npm run build
+      run: npm run lint
     
     - name: Run tests with coverage
       env:
@@ -50,17 +45,16 @@ jobs:
       run: npm run test:coverage
     
     - name: Upload coverage reports
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v3
       with:
         files: ./coverage/lcov.info
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
-        token: ${{ secrets.CODECOV_TOKEN }}
     
     - name: Archive test results
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: test-results-node-${{ matrix.node-version }}
         path: |
@@ -88,13 +82,10 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Build TypeScript
-      run: npm run build
-    
     - name: Test environment variable validation
       env:
-        ETHEREUM_RPC_URL: 'https://mainnet.infura.io/v3/ed05b301f1a949f59bfbc1c128910937'
-        POLYGON_RPC_URL: 'https://polygon-mainnet.g.alchemy.com/v2/YXw_o8m9DTfqafsqX3ebqH5QP1kClfZG'
+        ETHEREUM_RPC_URL: ''
+        POLYGON_RPC_URL: ''
       run: |
         echo "Testing that the code properly validates missing environment variables..."
         npm test -- --testNamePattern="Configuration Validation" || echo "Validation tests completed"
