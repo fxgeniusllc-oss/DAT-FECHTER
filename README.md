@@ -215,6 +215,7 @@ if (pools.length > 0) {
   const token1 = tokens.find(t => t.address === pool.token1);
   
   // Calculate human-readable reserves
+  // Note: For very large values, consider using BigInt arithmetic to avoid precision loss
   const reserve0Human = Number(pool.reserve0) / Math.pow(10, token0.decimals);
   const reserve1Human = Number(pool.reserve1) / Math.pow(10, token1.decimals);
   
@@ -237,6 +238,7 @@ function calculatePrice(pool, tokens) {
   const token1 = tokens.find(t => t.address === pool.token1);
   
   // Adjust for decimals
+  // Note: For production use with large values, consider using BigInt arithmetic or decimal.js
   const reserve0Adjusted = Number(pool.reserve0) / Math.pow(10, token0.decimals);
   const reserve1Adjusted = Number(pool.reserve1) / Math.pow(10, token1.decimals);
   
@@ -296,7 +298,8 @@ try {
   
   // Process data
 } catch (error) {
-  if (error.message.includes('RPC_URL is required')) {
+  if (error.message.includes('ETHEREUM_RPC_URL is required') || 
+      error.message.includes('POLYGON_RPC_URL is required')) {
     console.error('Configuration error:', error.message);
     console.log('Please check your .env file and ensure all required URLs are set.');
   } else {
@@ -310,6 +313,9 @@ try {
 For TypeScript projects, import types for better IDE support:
 
 ```typescript
+// Adjust the import path based on your project structure
+// For local development: './path/to/dex-data-fetcher'
+// For npm package usage: 'dex-data-fetcher'
 import { fetchAllDexData, Token, Pool, DexData } from './dex-data-fetcher';
 
 async function analyzeMarkets(): Promise<void> {
