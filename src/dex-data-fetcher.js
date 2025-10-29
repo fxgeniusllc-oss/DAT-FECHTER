@@ -70,8 +70,11 @@ async function fetchUniswapV3Data(config) {
 
   const query = `
     {
-      pools(first: 10, orderBy: totalValueLockedUSD, orderDirection: desc) {
+      pools(first: 100, orderBy: totalValueLockedUSD, orderDirection: desc) {
         id
+        factory {
+          id
+        }
         token0 {
           id
           symbol
@@ -117,6 +120,8 @@ async function fetchUniswapV3Data(config) {
 
       // Add pool
       pools.push({
+        id: pool.id.toLowerCase(),
+        factory: pool.factory?.id?.toLowerCase() || null,
         dexName: 'Uniswap V3',
         chain: 'Ethereum',
         token0: pool.token0.id.toLowerCase(),
@@ -149,7 +154,7 @@ async function fetchSushiSwapData(config) {
 
   const query = `
     {
-      pairs(first: 10, orderBy: reserveUSD, orderDirection: desc) {
+      pairs(first: 100, orderBy: reserveUSD, orderDirection: desc) {
         id
         token0 {
           id
@@ -194,6 +199,8 @@ async function fetchSushiSwapData(config) {
 
       // Add pool - use parseReserveToBigInt to avoid precision loss
       pools.push({
+        id: pair.id.toLowerCase(),
+        factory: null, // SushiSwap V2 doesn't expose factory in the query
         dexName: 'SushiSwap',
         chain: 'Ethereum',
         token0: pair.token0.id.toLowerCase(),
@@ -226,7 +233,7 @@ async function fetchQuickSwapData(config) {
 
   const query = `
     {
-      pairs(first: 10, orderBy: reserveUSD, orderDirection: desc) {
+      pairs(first: 100, orderBy: reserveUSD, orderDirection: desc) {
         id
         token0 {
           id
@@ -271,6 +278,8 @@ async function fetchQuickSwapData(config) {
 
       // Add pool - use parseReserveToBigInt to avoid precision loss
       pools.push({
+        id: pair.id.toLowerCase(),
+        factory: null, // QuickSwap doesn't expose factory in the query
         dexName: 'QuickSwap',
         chain: 'Polygon',
         token0: pair.token0.id.toLowerCase(),
