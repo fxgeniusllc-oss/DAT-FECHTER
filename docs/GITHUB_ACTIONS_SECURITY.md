@@ -54,7 +54,7 @@ While we currently use tag-based versions for ease of maintenance, for productio
 
 Workflows are configured with appropriate triggers:
 
-- `push` events limited to specific branches (main, develop, copilot/**)
+- `push` events limited to specific branches (main, develop, copilot/** matching any subdirectory)
 - `pull_request` events restricted to main and develop branches
 - `workflow_dispatch` enabled for manual testing when needed
 
@@ -95,4 +95,4 @@ Consider implementing:
 
 - [GitHub Actions Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)
 - [Implementing Least Privilege for Secrets](https://github.blog/security/application-security/implementing-least-privilege-for-secrets-in-github-actions/)
-- [Secure Use Reference](https://docs.github.com/en/actions/reference/security/secure-use)
+- [GitHub Actions Security Guides](https://docs.github.com/en/actions/security-guides)
