@@ -103,7 +103,7 @@ function getMonitoredTokensMap() {
  */
 function isMonitoredToken(address) {
   const lowerAddress = address.toLowerCase();
-  return MONITORED_TOKENS.some(token => token.address.toLowerCase() === lowerAddress);
+  return MONITORED_TOKENS_MAP.has(lowerAddress);
 }
 
 /**
@@ -113,7 +113,7 @@ function isMonitoredToken(address) {
  */
 function getTokenInfo(address) {
   const lowerAddress = address.toLowerCase();
-  return MONITORED_TOKENS.find(token => token.address.toLowerCase() === lowerAddress);
+  return MONITORED_TOKENS_MAP.get(lowerAddress);
 }
 
 module.exports = {
