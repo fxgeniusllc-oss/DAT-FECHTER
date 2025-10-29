@@ -15,6 +15,7 @@ build/
 *.js
 *.js.map
 !jest.config.js
+!.eslintrc.js
 
 # IDE
 .vscode/
