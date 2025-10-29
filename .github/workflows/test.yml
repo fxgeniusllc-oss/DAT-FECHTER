@@ -70,6 +70,7 @@ jobs:
   test-without-secrets:
     runs-on: ubuntu-latest
     
+    # Explicitly restrict permissions at job level - no write access
     permissions:
       contents: read
     
