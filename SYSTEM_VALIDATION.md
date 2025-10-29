@@ -63,10 +63,13 @@ JavaScript Fetcher (src/dex-data-fetcher.js)
 To validate the complete system synchronization:
 
 ```bash
-# Run full validation
+# Run system wiring validation
 npm run validate
 
-# Run validation + tests
+# Run end-to-end data flow test
+npm run test:e2e
+
+# Run validation + all tests
 npm run validate:full
 ```
 
@@ -279,21 +282,40 @@ The integration test suite (`src/__tests__/ai-scorer-executor-integration.test.j
 
 ### End-to-End Testing
 
-To test the complete system:
+The end-to-end test script (`test-e2e-flow.js`) validates the complete data flow:
+
+```bash
+# Run end-to-end data flow test
+npm run test:e2e
+```
+
+This test performs the following steps:
+
+1. **Step 1**: Generate sample data (simulating JavaScript fetcher)
+2. **Step 2**: Serialize data to JSON
+3. **Step 3**: Validate JSON structure and parsing
+4. **Step 4**: Validate Rust type compatibility
+5. **Step 5**: Simulate Rust consumption and processing
+6. **Step 6**: Verify data integrity after round-trip
+
+To test the complete system manually:
 
 ```bash
 # 1. Start with validation
 npm run validate
 
-# 2. Run all tests
+# 2. Run end-to-end flow test
+npm run test:e2e
+
+# 3. Run all unit tests
 npm test
 
-# 3. Test the API server
+# 4. Test the API server
 npm run start:dev &
 curl http://localhost:3000/health
 curl http://localhost:3000/v1/evm/pools
 
-# 4. Test Rust executor (requires dex_data.json)
+# 5. Test Rust executor (requires dex_data.json)
 cargo run --bin dual_executor
 ```
 

@@ -13,7 +13,8 @@
     "start": "node src/api/index.js",
     "start:dev": "dotenv -e .env -- node src/api/index.js",
     "validate": "node validate-system.js",
-    "validate:full": "npm run validate && npm test"
+    "validate:full": "npm run validate && npm test",
+    "test:e2e": "node test-e2e-flow.js"
   },
   "keywords": [
     "dex",
