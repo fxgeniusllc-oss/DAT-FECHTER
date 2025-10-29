@@ -1,14 +1,4 @@
-import { fetchAllDexData, getConfigFromEnv, Token, Pool } from 'path-to-DAT-FECHTER/src/index';
-
-async function main() {
-  const config = getConfigFromEnv();
-  const { tokens, pools } = await fetchAllDexData(config);
-
-  const scores = scorePools(pools, tokens);
-  console.log(scores);
-}
-
-main();use ort::{Environment, SessionBuilder, Value};
+use ort::{Environment, SessionBuilder, Value};
 use serde::{Deserialize};
 use std::error::Error;
 use std::path::Path;
