@@ -33,6 +33,61 @@ To use the DEX Data Fetcher module, ensure you have Node.js and npm installed. T
    npm install -g typescript
    ```
 
+## Configuration
+
+### Environment Variables Setup
+
+The DEX Data Fetcher requires RPC endpoints and API keys to connect to blockchain networks and fetch data from The Graph protocol. Follow these steps to configure your environment:
+
+1. **Create a `.env` file in the project root directory**:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Add your RPC URLs and API keys** to the `.env` file:
+   
+   The `.env` file should be placed in the **root directory** of the project (the same directory as `package.json` and `README.md`).
+
+   ```
+   /your-project-root/
+   ├── .env              ← Place your .env file here
+   ├── .env.example      ← Example template
+   ├── .gitignore        ← Ensures .env is not committed
+   ├── package.json
+   └── README.md
+   ```
+
+3. **Required environment variables**:
+
+   - `ETHEREUM_RPC_URL`: Your Ethereum mainnet RPC endpoint (required for Uniswap V3 and SushiSwap)
+   - `POLYGON_RPC_URL`: Your Polygon mainnet RPC endpoint (required for QuickSwap)
+   - `GRAPH_API_KEY`: (Optional) Your API key from The Graph for better rate limits
+
+4. **Getting RPC URLs**:
+   
+   You can obtain RPC URLs from various providers:
+   - [Alchemy](https://www.alchemy.com/) - Recommended, generous free tier
+   - [Infura](https://infura.io/) - Popular choice with free tier
+   - [QuickNode](https://www.quicknode.com/) - Fast and reliable
+   - [Ankr](https://www.ankr.com/) - Free public endpoints (rate limited)
+
+5. **Getting The Graph API Key**:
+   
+   Visit [The Graph Studio](https://thegraph.com/studio/apikeys/) to create a free API key for accessing subgraph data.
+
+### Example `.env` File
+
+```env
+# RPC Endpoints
+ETHEREUM_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+POLYGON_RPC_URL=https://polygon-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+
+# The Graph API Key (optional)
+GRAPH_API_KEY=YOUR_GRAPH_API_KEY
+```
+
+> **⚠️ Security Warning**: Never commit your `.env` file to version control! The `.gitignore` file is already configured to exclude it.
+
 ## Usage
 
 ### Importing the Module
