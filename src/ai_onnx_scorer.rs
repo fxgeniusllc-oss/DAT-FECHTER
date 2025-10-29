@@ -1,5 +1,5 @@
-use ort::session::Session;
-use ort::value::Value;
+use ort::{Environment, SessionBuilder, Value};
+use serde::{Deserialize};
 use std::error::Error;
 use std::path::Path;
 
