@@ -193,9 +193,17 @@ For comprehensive testing instructions including how to run tests with your secr
 
 For setting up GitHub repository secrets for automated testing in CI/CD, see the **[GitHub Secrets Setup Guide (GITHUB_SECRETS_SETUP.md)](GITHUB_SECRETS_SETUP.md)**.
 
+For validating system synchronization and data flow, see the **[System Validation Guide (SYSTEM_VALIDATION.md)](SYSTEM_VALIDATION.md)**.
+
 ### Quick Test Commands
 
 ```bash
+# Validate system synchronization and wiring
+npm run validate
+
+# Run validation + tests
+npm run validate:full
+
 # Run tests with environment variables from .env
 npm run test:env
 
@@ -386,6 +394,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Additional Resources
 
+- [System Validation Guide](SYSTEM_VALIDATION.md) - Complete system synchronization validation
 - [Testing Guide](TESTING.md) - Comprehensive testing documentation
 - [GitHub Secrets Setup](GITHUB_SECRETS_SETUP.md) - Configure secrets for CI/CD
 - [Uniswap V3 Subgraph](https://thegraph.com/explorer/subgraph/uniswap/uniswap-v3)
